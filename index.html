@@ -3,11 +3,15 @@
 <head>
     <title>Cake Cutter</title>
     <style>
-        #container {
-            position: relative;
-            width: 100%;
-            height: 80vh; /* adjust this as per your requirements */
-            overflow: hidden;
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
         video, canvas {
             position: absolute;
@@ -16,22 +20,14 @@
             width: 100%;
             height: 100%;
         }
-        canvas {
-            background: transparent;
-        }
-        h1 {
-            text-align: center;
-        }
     </style>
 </head>
 <body>
     <h1>This is the Cake Cutter Ver 1.0</h1>
     <input id="slices" type="number" placeholder="Enter number of slices">
     <button id="slice">Slice!</button>
-    <div id="container">
-        <video autoplay playsinline></video> <!-- playsinline ensures that video plays in inline mode on iOS devices -->
-        <canvas></canvas>
-    </div>
+    <video autoplay playsinline></video> <!-- playsinline ensures that video plays in inline mode on iOS devices -->
+    <canvas></canvas>
 
     <script>
         // Access the user's camera
