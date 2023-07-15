@@ -13,8 +13,14 @@
 
         // Access the user's camera
         const video = document.querySelector('video');
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+        navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                facingMode: "environment" 
+            } 
+        }).then(stream => {
             video.srcObject = stream;
+        }).catch(error => {
+            console.error("Cannot access the camera: ", error);
         });
 
         // When the 'Slice!' button is clicked, perform cake detection and draw slices
