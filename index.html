@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cake Cutter</title>
     <style>
         body {
@@ -20,12 +21,27 @@
             width: 100%;
             height: 100%;
         }
+        #controls {
+            position: fixed;
+            bottom: 10px;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+        }
+        h1 {
+            position: fixed;
+            top: 10px;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
     <h1>This is the Cake Cutter Ver 1.0</h1>
-    <input id="slices" type="number" placeholder="Enter number of slices">
-    <button id="slice">Slice!</button>
+    <div id="controls">
+        <input id="slices" type="number" placeholder="Enter number of slices">
+        <button id="slice">Slice!</button>
+    </div>
     <video autoplay playsinline></video> <!-- playsinline ensures that video plays in inline mode on iOS devices -->
     <canvas></canvas>
 
