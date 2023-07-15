@@ -12,7 +12,7 @@
             height: 100vh;
             margin: 0;
             background: #f0f0f0;
-            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            font-family: Arial, sans-serif;
         }
         video, canvas {
             position: absolute;
@@ -26,7 +26,7 @@
         }
         #controls {
             position: fixed;
-            top: 40px;
+            top: 60px;
             width: 90%;
             display: flex;
             justify-content: center;
@@ -45,7 +45,7 @@
     </style>
 </head>
 <body>
-    <h1>This is the Cake Cutter Ver 1.0</h1>
+    <h1>This is the Cake Cutter Ver 1.2</h1>
     <div id="controls">
         <input id="slices" type="number" placeholder="Enter number of slices">
         <button id="slice">Slice!</button>
@@ -54,7 +54,50 @@
     <canvas></canvas>
 
     <script>
-        // Same JavaScript code as before...
+        const video = document.querySelector('video');
+        const slicesInput = document.querySelector('#slices');
+        const sliceButton = document.querySelector('#slice');
+        const canvas = document.querySelector('canvas');
+
+        navigator.mediaDevices.getUserMedia({
+            video: { 
+                facingMode: "environment"
+            }
+        }).then(stream => {
+            video.srcObject = stream;
+        }).catch(error => {
+            console.error("Cannot access the camera: ", error);
+        });
+
+        sliceButton.addEventListener('click', () => {
+            const numberOfSlices = slicesInput.value;
+            if (!numberOfSlices) {
+                alert('Please enter a number of slices.');
+                return;
+            }
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 10;
+
+            const sliceAngle = 2 * Math.PI / numberOfSlices;
+
+            for (let i = 0; i < numberOfSlices; i++) {
+                context.beginPath();
+                context.moveTo(centerX, centerY);
+                context.arc(centerX, centerY, radius, i * sliceAngle, (i + 1) * sliceAngle);
+                context.closePath();
+                context.lineWidth = 2;
+                context.strokeStyle = '#ff0000';
+                context.stroke();
+            }
+        });
     </script>
 </body>
 </html>
