@@ -16,10 +16,13 @@
         }
         video, canvas {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
         }
         #controls {
             position: fixed;
@@ -37,7 +40,7 @@
     </style>
 </head>
 <body>
-    <h1>This is the Cake Cutter Ver 1.0</h1>
+    <h1>This is the Cake Cutter Ver 1.1</h1>
     <div id="controls">
         <input id="slices" type="number" placeholder="Enter number of slices">
         <button id="slice">Slice!</button>
@@ -46,48 +49,38 @@
     <canvas></canvas>
 
     <script>
-        // Get the necessary elements
         const video = document.querySelector('video');
         const slicesInput = document.querySelector('#slices');
         const sliceButton = document.querySelector('#slice');
         const canvas = document.querySelector('canvas');
 
         sliceButton.addEventListener('click', () => {
-            // Make sure the user has entered a number of slices
             const numberOfSlices = slicesInput.value;
             if (!numberOfSlices) {
                 alert('Please enter a number of slices.');
                 return;
             }
 
-            // Request access to the user's camera
             navigator.mediaDevices.getUserMedia({
                 video: { 
                     facingMode: "environment"
                 }
             }).then(stream => {
-                // Set the video stream
                 video.srcObject = stream;
 
-                // Wait for the video to be loaded
                 video.onloadedmetadata = () => {
-                    // Make sure the canvas is the same size as the video
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
 
-                    // Clear the canvas
                     const context = canvas.getContext('2d');
                     context.clearRect(0, 0, canvas.width, canvas.height);
 
-                    // Calculate the center and radius of the circle
                     const centerX = canvas.width / 2;
                     const centerY = canvas.height / 2;
                     const radius = Math.min(centerX, centerY) - 10;
 
-                    // Calculate the angle between slices
                     const sliceAngle = 2 * Math.PI / numberOfSlices;
 
-                    // Draw the slices
                     for (let i = 0; i < numberOfSlices; i++) {
                         context.beginPath();
                         context.moveTo(centerX, centerY);
