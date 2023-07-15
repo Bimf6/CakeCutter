@@ -1,0 +1,27 @@
+<html>
+<body>
+    <input id="slices" type="number" placeholder="Enter number of slices">
+    <button id="slice">Slice!</button>
+    <video autoplay></video>
+    <canvas></canvas>
+
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script>
+        // Load the trained TensorFlow.js model for cake detection
+
+        // Access the user's camera
+        const video = document.querySelector('video');
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            video.srcObject = stream;
+        });
+
+        // When the 'Slice!' button is clicked, perform cake detection and draw slices
+        document.querySelector('#slice').addEventListener('click', () => {
+            const numberOfSlices = document.querySelector('#slices').value;
+            // Perform cake detection and draw slices...
+        });
+    </script>
+</body>
+</html>
