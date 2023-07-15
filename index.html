@@ -42,55 +42,65 @@
         <input id="slices" type="number" placeholder="Enter number of slices">
         <button id="slice">Slice!</button>
     </div>
-    <video autoplay playsinline></video> <!-- playsinline ensures that video plays in inline mode on iOS devices -->
+    <video autoplay playsinline></video>
     <canvas></canvas>
 
     <script>
-        // Access the user's camera
+        // Get the necessary elements
         const video = document.querySelector('video');
-        navigator.mediaDevices.getUserMedia({ 
-            video: { 
-                facingMode: "environment" 
-            } 
-        }).then(stream => {
-            video.srcObject = stream;
-        }).catch(error => {
-            console.error("Cannot access the camera: ", error);
-        });
+        const slicesInput = document.querySelector('#slices');
+        const sliceButton = document.querySelector('#slice');
+        const canvas = document.querySelector('canvas');
 
-        // When the 'Slice!' button is clicked, draw slices on a canvas overlay
-        document.querySelector('#slice').addEventListener('click', () => {
-            const numberOfSlices = document.querySelector('#slices').value;
-            const canvas = document.querySelector('canvas');
-            const context = canvas.getContext('2d');
-
-            // Make sure the canvas is the same size as the video
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-
-            // Clear the canvas
-            context.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Calculate the center and radius of the circle
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = Math.min(centerX, centerY) - 10;  // Subtract 10 to leave some margin
-
-            // Calculate the angle between slices
-            const sliceAngle = 2 * Math.PI / numberOfSlices;
-
-            // Draw the slices
-            for (let i = 0; i < numberOfSlices; i++) {
-                context.beginPath();
-                context.moveTo(centerX, centerY);
-                context.arc(centerX, centerY, radius, i * sliceAngle, (i + 1) * sliceAngle);
-                context.closePath();
-
-                // Style the slice
-                context.lineWidth = 2;
-                context.strokeStyle = '#ff0000';  // Red color
-                context.stroke();
+        sliceButton.addEventListener('click', () => {
+            // Make sure the user has entered a number of slices
+            const numberOfSlices = slicesInput.value;
+            if (!numberOfSlices) {
+                alert('Please enter a number of slices.');
+                return;
             }
+
+            // Request access to the user's camera
+            navigator.mediaDevices.getUserMedia({
+                video: { 
+                    facingMode: "environment"
+                }
+            }).then(stream => {
+                // Set the video stream
+                video.srcObject = stream;
+
+                // Wait for the video to be loaded
+                video.onloadedmetadata = () => {
+                    // Make sure the canvas is the same size as the video
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+
+                    // Clear the canvas
+                    const context = canvas.getContext('2d');
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Calculate the center and radius of the circle
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    const radius = Math.min(centerX, centerY) - 10;
+
+                    // Calculate the angle between slices
+                    const sliceAngle = 2 * Math.PI / numberOfSlices;
+
+                    // Draw the slices
+                    for (let i = 0; i < numberOfSlices; i++) {
+                        context.beginPath();
+                        context.moveTo(centerX, centerY);
+                        context.arc(centerX, centerY, radius, i * sliceAngle, (i + 1) * sliceAngle);
+                        context.closePath();
+                        context.lineWidth = 2;
+                        context.strokeStyle = '#ff0000';
+                        context.stroke();
+                    }
+                };
+            }).catch(error => {
+                console.error("Cannot access the camera: ", error);
+            });
         });
     </script>
 </body>
