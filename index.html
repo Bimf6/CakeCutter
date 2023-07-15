@@ -1,20 +1,14 @@
+<!DOCTYPE html>
 <html>
-<body>
-    <input id="slices" type="number" placeholder="Enter number of slices">
-    <button id="slice">Slice!</button>
-
-    <div id="container">
-        <video autoplay></video>
-        <canvas></canvas>
-    </div>
-
+<head>
+    <title>Cake Cutter</title>
     <style>
         #container {
             position: relative;
             width: 100%;
-            height: 100vh; /* or another value to control the height */
+            height: 80vh; /* adjust this as per your requirements */
+            overflow: hidden;
         }
-
         video, canvas {
             position: absolute;
             top: 0;
@@ -22,13 +16,70 @@
             width: 100%;
             height: 100%;
         }
-
         canvas {
             background: transparent;
         }
+        h1 {
+            text-align: center;
+        }
     </style>
+</head>
+<body>
+    <h1>This is the Cake Cutter Ver 1.0</h1>
+    <input id="slices" type="number" placeholder="Enter number of slices">
+    <button id="slice">Slice!</button>
+    <div id="container">
+        <video autoplay playsinline></video> <!-- playsinline ensures that video plays in inline mode on iOS devices -->
+        <canvas></canvas>
+    </div>
 
-    <!-- your scripts -->
+    <script>
+        // Access the user's camera
+        const video = document.querySelector('video');
+        navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                facingMode: "environment" 
+            } 
+        }).then(stream => {
+            video.srcObject = stream;
+        }).catch(error => {
+            console.error("Cannot access the camera: ", error);
+        });
 
+        // When the 'Slice!' button is clicked, draw slices on a canvas overlay
+        document.querySelector('#slice').addEventListener('click', () => {
+            const numberOfSlices = document.querySelector('#slices').value;
+            const canvas = document.querySelector('canvas');
+            const context = canvas.getContext('2d');
+
+            // Make sure the canvas is the same size as the video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Clear the canvas
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Calculate the center and radius of the circle
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 10;  // Subtract 10 to leave some margin
+
+            // Calculate the angle between slices
+            const sliceAngle = 2 * Math.PI / numberOfSlices;
+
+            // Draw the slices
+            for (let i = 0; i < numberOfSlices; i++) {
+                context.beginPath();
+                context.moveTo(centerX, centerY);
+                context.arc(centerX, centerY, radius, i * sliceAngle, (i + 1) * sliceAngle);
+                context.closePath();
+
+                // Style the slice
+                context.lineWidth = 2;
+                context.strokeStyle = '#ff0000';  // Red color
+                context.stroke();
+            }
+        });
+    </script>
 </body>
 </html>
