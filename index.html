@@ -2,59 +2,33 @@
 <body>
     <input id="slices" type="number" placeholder="Enter number of slices">
     <button id="slice">Slice!</button>
-    <video autoplay></video>
-    <canvas></canvas>
 
-    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script>
-        // Access the user's camera
-        const video = document.querySelector('video');
-        navigator.mediaDevices.getUserMedia({ 
-            video: { 
-                facingMode: "environment" 
-            } 
-        }).then(stream => {
-            video.srcObject = stream;
-        }).catch(error => {
-            console.error("Cannot access the camera: ", error);
-        });
+    <div id="container">
+        <video autoplay></video>
+        <canvas></canvas>
+    </div>
 
-        // When the 'Slice!' button is clicked, draw slices on a canvas overlay
-        document.querySelector('#slice').addEventListener('click', () => {
-            const numberOfSlices = document.querySelector('#slices').value;
-            const canvas = document.querySelector('canvas');
-            const context = canvas.getContext('2d');
-            
-            // Make sure the canvas is the same size as the video
-            canvas.width = video.offsetWidth;
-            canvas.height = video.offsetHeight;
+    <style>
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* or another value to control the height */
+        }
 
-            // Clear the canvas
-            context.clearRect(0, 0, canvas.width, canvas.height);
+        video, canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
-            // Calculate the center and radius of the circle
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = Math.min(centerX, centerY) - 10;  // Subtract 10 to leave some margin
+        canvas {
+            background: transparent;
+        }
+    </style>
 
-            // Calculate the angle between slices
-            const sliceAngle = 2 * Math.PI / numberOfSlices;
+    <!-- your scripts -->
 
-            // Draw the slices
-            for (let i = 0; i < numberOfSlices; i++) {
-                context.beginPath();
-                context.moveTo(centerX, centerY);
-                context.arc(centerX, centerY, radius, i * sliceAngle, (i + 1) * sliceAngle);
-                context.closePath();
-
-                // Style the slice
-                context.lineWidth = 2;
-                context.strokeStyle = '#ff0000';  // Red color
-                context.stroke();
-            }
-        });
-    </script>
 </body>
 </html>
